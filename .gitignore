@@ -1,5 +1,6 @@
 # Prerequisites
 *.d
+*.ui
 
 # Object files
 *.o
@@ -50,4 +51,5 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+calculator
 calculator
