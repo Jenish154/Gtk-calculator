@@ -51,9 +51,12 @@ void num_button_handler(GtkWidget *widget, gpointer data)
     if (validate_entry(text_from_entry, inp_data->num, leng))
     {
         //select the text in the entry append the new one and set that one as the new text
-        const gchar *text = gtk_entry_get_text(entry);
-        gchar *new_text = g_strconcat(text, &(inp_data->num), NULL);
+        //const gchar *text = gtk_entry_get_text(entry);
+        //gchar *new_text = g_strconcat(text, &(inp_data->num), NULL);
+        gchar *new_text = g_strdup_printf("%s%c", gtk_entry_get_text(entry), inp_data->num);
         gtk_entry_set_text(entry, new_text);
+
+        g_free(new_text);
 
     }
     
@@ -70,8 +73,16 @@ void compute(GtkWidget *widget, gpointer data)
     bool success;
     double result = calculate(text_from_entry, &success);
 
-    //convert the double result value to gchar
-    gchar *result_string = g_strdup_printf("%lf", result);
+    gchar *result_string;
+
+    //if number has no fractional part use integer
+    if (result == (int)result) 
+    {
+        result_string = g_strdup_printf("%d", (int)result);
+    } else
+    {
+        result_string = g_strdup_printf("%lf", result);
+    }
     gtk_entry_set_text(entry, result_string);
 
     //free the memory
@@ -107,6 +118,7 @@ int main(int argc, char **argv)
     g_signal_connect(button, "clicked", G_CALLBACK(compute), data);
     
     char buffer[9];
+    InpData *struct_arr[14] = {data};
 
     for (char i = '0'; i <= '9'; i++) 
     {
@@ -118,6 +130,7 @@ int main(int argc, char **argv)
         sprintf(buffer, "button_%c", i);
         button = gtk_builder_get_object(builder, buffer);
         g_signal_connect(button, "clicked", G_CALLBACK(num_button_handler), data);
+        struct_arr[i+1] = data;
     }
 
     for (int j = 0; j<(sizeof(operators)/sizeof(char)); j++)
@@ -129,10 +142,14 @@ int main(int argc, char **argv)
         sprintf(buffer, "button_%c", operators[j]);
         button = gtk_builder_get_object(builder, buffer);
         g_signal_connect(button, "clicked", G_CALLBACK(num_button_handler), data);
+        struct_arr[j+11] = data;
     }
 
     gtk_main();
-
+    for (int ind = 0; ind <=13; ind++)
+    {
+        g_free(struct_arr[ind]);
+    }
 
     return 0;
 }
