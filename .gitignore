@@ -1,6 +1,5 @@
 # Prerequisites
 *.d
-*.ui
 
 # Object files
 *.o

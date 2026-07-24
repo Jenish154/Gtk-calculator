@@ -144,7 +144,7 @@ int main(int argc, char **argv)
         g_signal_connect(button, "clicked", G_CALLBACK(num_button_handler), data);
         struct_arr[j+11] = data;
     }
-
+    gtk_widget_show_all(GTK_WIDGET(window));
     gtk_main();
     for (int ind = 0; ind <=13; ind++)
     {
